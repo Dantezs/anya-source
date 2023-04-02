@@ -1,0 +1,85 @@
+const { ApplicationCommandOptionType, AttachmentBuilder } = require('discord.js');
+
+const { Configuration, OpenAIApi } = require('openai');
+const Discord = require("discord.js")
+
+module.exports = {
+
+    name: 'gerar', // Nome do comando aqui
+
+    description: "sub",
+
+  options: [
+
+    {
+
+      name: 'imagem',
+
+      description: 'Gere imagens utilizando a IA',
+
+//   description_localizations: {"en-US":"Punish a user from your server"},
+
+      type: ApplicationCommandOptionType.Subcommand,
+
+    options: [
+
+        {
+
+            name: "input",
+
+            description: "Defina o contexto para gerar uma imagem",
+
+            type: ApplicationCommandOptionType.String,
+           // autocomplete: true,
+            required: true
+
+        }
+
+    ],
+        },
+      ],
+
+   run: async(client, interaction) => {
+
+       switch (interaction.options.getSubcommand()) {
+
+      case 'imagem': {
+          
+     interaction.deferReply({ content: "Espere alguns minutos para a imagem ser gerada"});
+
+    const prompt = interaction.options.getString('input');
+
+    
+
+    const configuration = new Configuration({
+
+      apiKey:  `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`,
+
+    });
+
+    const openai = new OpenAIApi(configuration);
+
+    
+
+    const response = await openai.createImage({
+
+  prompt: prompt,
+
+  n: 1,
+
+  size: "1024x1024",
+
+});
+    
+    /* Se a resposta tiver mais de 2.000 caracteres, ela será enviada como um arquivo. */
+
+            let Embed = new Discord.EmbedBuilder()
+            .setImage(response.data.data[0].url)
+            .setColor('#2f3136')
+      interaction.editReply({ embeds: [Embed]})
+  }
+               break;
+               }
+       }
+
+};
