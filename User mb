@@ -1,0 +1,64 @@
+const dc = require("discord.js");
+
+module.exports = {
+
+  name: "ver",
+
+  description: "sub",
+
+  options: [
+
+    {
+
+      name: 'painel',
+
+      description: 'Loading...',
+
+      type: dc.ApplicationCommandOptionType.Subcommand,
+
+      options: [
+
+        {
+
+      name: 'usuario',
+
+      description: '...',
+
+      type: dc.ApplicationCommandOptionType.User,
+
+    },
+
+  ],
+
+    },
+
+    ],
+
+  run: async (client, interaction) => {
+
+    
+
+    switch (interaction.options.getSubcommand()) {
+
+      case 'painel': {
+
+        const member = interaction.options.getMember('usuario');
+
+ if (!interaction.member.permissions.has(dc.PermissionFlagsBits.ManageGuild)) {
+
+        interaction.reply(`Olá ${interaction.user}, você não possui permissão para utilizar este comando.`)
+
+ }
+
+        interaction.reply({content: `${member}`})
+
+        break;
+
+      }
+
+    }
+
+  }
+
+}
+
